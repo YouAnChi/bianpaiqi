@@ -1,0 +1,69 @@
+{
+  "name": "Reviewer Agent",
+  "description": "由Gemini驱动的质量保证和审核专家。可以审核代码、文档和计划，发现错误并提出改进建议。",
+  "version": "1.0.0",
+  "url": "http://localhost:10005",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "review_code",
+      "name": "代码审核",
+      "description": "审核源代码，查找bug、安全问题和风格违规。",
+      "tags": [
+        "review",
+        "code",
+        "audit",
+        "审核",
+        "代码",
+        "检查"
+      ],
+      "examples": [
+        "审核这个Python函数是否存在潜在的内存泄漏",
+        "检查这个PR是否有安全漏洞",
+        "审查这段代码的质量"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    },
+    {
+      "id": "review_content",
+      "name": "内容审核",
+      "description": "审核书面内容的清晰度、准确性和语气。",
+      "tags": [
+        "review",
+        "editing",
+        "quality",
+        "审核",
+        "编辑",
+        "质量"
+      ],
+      "examples": [
+        "审核这篇博客文章的清晰度和吸引力",
+        "检查这份技术文档的准确性",
+        "审查这份报告的质量"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

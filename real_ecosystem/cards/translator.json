@@ -1,0 +1,45 @@
+{
+  "name": "Translator Agent",
+  "description": "由Gemini驱动的语言翻译专家。可以在多种语言之间翻译文本，同时保留细微差别和语气。",
+  "version": "1.0.0",
+  "url": "http://localhost:10006",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "translate_text",
+      "name": "文本翻译",
+      "description": "将文本从一种语言翻译成另一种语言。",
+      "tags": [
+        "translation",
+        "language",
+        "localization",
+        "翻译",
+        "语言",
+        "本地化"
+      ],
+      "examples": [
+        "将这篇文章从英语翻译成西班牙语",
+        "将这份用户手册转换成法语",
+        "翻译这段文字"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

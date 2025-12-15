@@ -1,0 +1,67 @@
+{
+  "name": "Coder Agent",
+  "description": "由Gemini驱动的软件工程师智能体。可以编写Python、JavaScript等代码，调试问题，设计系统架构。",
+  "version": "2.0.0",
+  "url": "http://localhost:10003",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "write_code",
+      "name": "编写代码",
+      "description": "生成代码片段或完整程序。",
+      "tags": [
+        "coding",
+        "programming",
+        "编程",
+        "代码",
+        "开发"
+      ],
+      "examples": [
+        "编写一个Python脚本来爬取网站",
+        "创建一个React登录表单组件",
+        "写一个排序算法"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    },
+    {
+      "id": "debug",
+      "name": "调试代码",
+      "description": "识别并修复代码中的错误。",
+      "tags": [
+        "debugging",
+        "troubleshooting",
+        "调试",
+        "修复",
+        "错误排查"
+      ],
+      "examples": [
+        "修复这个JavaScript函数的语法错误",
+        "为什么我的Python循环是无限的？",
+        "帮我找出这段代码的bug"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

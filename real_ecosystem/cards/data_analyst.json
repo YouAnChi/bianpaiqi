@@ -1,0 +1,69 @@
+{
+  "name": "Data Analyst Agent",
+  "description": "由Gemini驱动的数据分析专家。可以分析数据集、生成洞察、创建可视化报告。",
+  "version": "1.0.0",
+  "url": "http://localhost:10004",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "analyze_data",
+      "name": "数据分析",
+      "description": "分析结构化或非结构化数据，发现模式和趋势。",
+      "tags": [
+        "analysis",
+        "data",
+        "statistics",
+        "分析",
+        "数据",
+        "统计",
+        "趋势"
+      ],
+      "examples": [
+        "分析这份销售数据并找出表现最好的地区",
+        "识别这个客户反馈数据集中的趋势",
+        "对这些数据进行统计分析"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    },
+    {
+      "id": "generate_report",
+      "name": "生成报告",
+      "description": "基于分析结果创建详细报告。",
+      "tags": [
+        "report",
+        "summary",
+        "报告",
+        "总结",
+        "汇总"
+      ],
+      "examples": [
+        "创建季度绩效报告",
+        "在商业智能报告中总结发现",
+        "生成数据分析报告"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

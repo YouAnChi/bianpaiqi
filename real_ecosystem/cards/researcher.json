@@ -1,0 +1,67 @@
+{
+  "name": "Researcher Agent",
+  "description": "由Gemini驱动的智能研究助手。可以研究任何主题、提供摘要、解释复杂概念。",
+  "version": "2.0.0",
+  "url": "http://localhost:10001",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "research",
+      "name": "研究调查",
+      "description": "对给定主题进行全面研究。",
+      "tags": [
+        "research",
+        "analysis",
+        "研究",
+        "调查",
+        "信息收集"
+      ],
+      "examples": [
+        "研究量子计算的最新进展",
+        "查找关于罗马帝国历史的信息",
+        "调查人工智能的发展趋势"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    },
+    {
+      "id": "summarize",
+      "name": "总结归纳",
+      "description": "总结长文本或复杂主题。",
+      "tags": [
+        "summary",
+        "nlp",
+        "总结",
+        "归纳",
+        "概括"
+      ],
+      "examples": [
+        "总结这篇关于气候变化的文章",
+        "简要概述相对论理论",
+        "归纳这份报告的要点"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

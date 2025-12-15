@@ -1,0 +1,70 @@
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from yinqing.core.types import ExecutionPlan
+from yinqing.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+class TaskParserLayer:
+    """大脑：负责将自然语言拆解为结构化步骤（支持并行依赖）"""
+    
+    def __init__(self):
+        self.llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1)
+        self.parser = JsonOutputParser(pydantic_object=ExecutionPlan)
+        
+        # 优化Prompt：明确支持并行依赖
+        self.prompt = ChatPromptTemplate.from_template(
+            """
+            你是一位资深系统架构师，擅长AI智能体编排和并行任务调度。
+            用户目标: {query}
+            
+            你的任务是将这个目标拆解为**支持并行执行的逻辑子任务列表（步骤）**。
+            每个步骤必须：
+            1. 是一个单一的、可执行的任务，可以由专业的AI智能体完成（例如："生成结构化的演示大纲"、"收集AI趋势数据"、"为幻灯片编写内容"）。
+            2. 有清晰、简洁的描述，便于智能体发现（避免模糊的语言）。
+            3. 列出它依赖的上下文键（例如：["step_1_output", "step_2_output"] 表示需要步骤1和步骤2的结果）。
+            4. 列出依赖项（此步骤依赖的步骤ID；如果没有则使用空列表）。没有依赖项的步骤可以并行执行。
+            5. 分配唯一的、从1开始的连续步骤ID（例如：1, 2, 3...）。
+            
+            并行性的重要规则：
+            - 将独立的任务拆分为可以并行运行的单独步骤（例如："生成大纲"和"收集数据"是独立的，所以它们应该是步骤1和步骤2，没有依赖关系）。
+            - 保持步骤数量合理（大多数目标3-10个步骤）。
+            - 确保没有循环依赖（例如：步骤1依赖步骤2，步骤2依赖步骤1）。
+            
+            {format_instructions}
+            """
+        )
+        self.chain = self.prompt | self.llm | self.parser
+
+    async def parse(self, query: str, context_id: str, task_id: str) -> ExecutionPlan:
+        logger.info(f"🧠 [Parser] Analyzing query: {query}")
+        try:
+            response = await self.chain.ainvoke({
+                "query": query,
+                "format_instructions": self.parser.get_format_instructions()
+            })
+            plan = ExecutionPlan(**response)
+            plan.task_id = task_id
+            plan.context_id = context_id
+            # 修复LLM生成的重复step_id
+            step_ids = [step.step_id for step in plan.steps]
+            if len(step_ids) != len(set(step_ids)):
+                for idx, step in enumerate(plan.steps):
+                    step.step_id = idx + 1
+            # 初始化DAG
+            plan.init_dag()
+            # 检测循环依赖
+            if plan.check_cycle():
+                raise ValueError("Execution plan contains circular dependencies!")
+            
+            # 详细日志输出
+            logger.info(f"[bold green]🧠 [Parser] Plan Generated[/bold green] (trace_id: {plan.trace_id}):")
+            for step in plan.steps:
+                dep_str = f"depends on {step.dependencies}" if step.dependencies else "no dependencies"
+                logger.info(f"  Step {step.step_id}: [bold]{step.name}[/bold] - {step.description} ([italic]{dep_str}[/italic])")
+            
+            return plan
+        except Exception as e:
+            logger.error(f"Parser failed: {e}")
+            raise

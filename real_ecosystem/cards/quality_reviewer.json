@@ -1,0 +1,55 @@
+{
+  "name": "Quality Reviewer Agent",
+  "description": "专业的质量审核Agent，负责检查其他Agent的执行结果质量，提供改进建议和回溯推荐。可以评估任务完成度、准确性、完整性，并在必要时建议重试或回溯到前置步骤。",
+  "version": "1.0.0",
+  "url": "http://localhost:10007",
+  "config": {
+    "http_url": "http://localhost:10007"
+  },
+  "capabilities": {
+    "streaming": true,
+    "review": true,
+    "rollback_suggestion": true,
+    "quality_scoring": true
+  },
+  "skills": [
+    {
+      "id": "quality_check",
+      "name": "Quality Check",
+      "description": "检查执行结果的质量、完整性和准确性，提供0-1的质量评分",
+      "tags": ["review", "quality", "check", "validate", "审核", "质量检查", "评估"],
+      "examples": [
+        "审核这段代码的质量",
+        "检查这份报告是否完整",
+        "评估这个分析结果的准确性"
+      ]
+    },
+    {
+      "id": "rollback_analysis",
+      "name": "Rollback Analysis",
+      "description": "分析问题原因，判断是否需要重试或回溯到前置步骤",
+      "tags": ["rollback", "analysis", "improvement", "回溯", "分析", "改进建议"],
+      "examples": [
+        "分析这个错误应该如何处理",
+        "判断是否需要重新执行前面的步骤"
+      ]
+    },
+    {
+      "id": "improvement_suggestion",
+      "name": "Improvement Suggestion",
+      "description": "提供具体的、可执行的改进建议",
+      "tags": ["suggestion", "improvement", "feedback", "建议", "改进", "优化"],
+      "examples": [
+        "这个结果如何改进",
+        "提供改进建议"
+      ]
+    }
+  ],
+  "interaction_endpoints": [
+    {
+      "type": "http",
+      "url": "http://localhost:10007",
+      "method": "POST"
+    }
+  ]
+}

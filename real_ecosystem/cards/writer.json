@@ -1,0 +1,67 @@
+{
+  "name": "Writer Agent",
+  "description": "由Gemini驱动的创意作家。可以撰写博客、故事、邮件，润色内容。",
+  "version": "2.0.0",
+  "url": "http://localhost:10002",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "write_creative",
+      "name": "创意写作",
+      "description": "撰写引人入胜的故事、诗歌或剧本。",
+      "tags": [
+        "writing",
+        "creative",
+        "写作",
+        "创作",
+        "文学"
+      ],
+      "examples": [
+        "写一个关于时间旅行者的短篇故事",
+        "创作一首关于海洋的诗",
+        "写一篇科幻小说"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    },
+    {
+      "id": "edit_content",
+      "name": "内容编辑",
+      "description": "润色和完善现有内容。",
+      "tags": [
+        "editing",
+        "proofreading",
+        "编辑",
+        "润色",
+        "校对"
+      ],
+      "examples": [
+        "编辑这封邮件使其听起来更专业",
+        "校对这篇文章的语法和拼写错误",
+        "润色这段文字"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}
