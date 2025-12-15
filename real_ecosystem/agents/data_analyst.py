@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 # Hardcoded API Key
-GOOGLE_API_KEY = "AIzaSyAfBE4gh2z9AoD93z5mVlJfq027fYT_84s"
+GOOGLE_API_KEY = "AIzaSyC_aqH9032IaWIcRhymnxhSvoT-Mn_u5rs"
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 
 # Configure Logging

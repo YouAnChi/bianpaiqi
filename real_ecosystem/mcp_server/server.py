@@ -37,6 +37,31 @@ def normalize_card_fields(card: dict) -> dict:
     return normalized
 
 @mcp.tool()
+def list_all_agents() -> str:
+    """Lists all available agents with their capabilities."""
+    print(f"📋 [Real MCP Server] Listing all agents")
+    
+    cards_dir = os.path.join(os.path.dirname(__file__), "../cards")
+    all_agents = []
+    
+    if not os.path.exists(cards_dir):
+        print(f"❌ [Real MCP Server] Cards directory not found: {cards_dir}")
+        return json.dumps([], ensure_ascii=False)
+    
+    for filename in os.listdir(cards_dir):
+        if filename.endswith(".json"):
+            try:
+                with open(os.path.join(cards_dir, filename), "r", encoding="utf-8") as f:
+                    card = json.load(f)
+                    normalized_card = normalize_card_fields(card)
+                    all_agents.append(normalized_card)
+            except Exception as e:
+                print(f"⚠️ Error reading card {filename}: {e}")
+    
+    print(f"✅ [Real MCP Server] Found {len(all_agents)} agents")
+    return json.dumps(all_agents, ensure_ascii=False)
+
+@mcp.tool()
 def find_agent(query: str) -> str:
     """Finds an agent based on a natural language query."""
     print(f"🔎 [Real MCP Server] Received find_agent query: {query}")

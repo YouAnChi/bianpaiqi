@@ -1,0 +1,49 @@
+{
+  "name": "Excel Generator Agent",
+  "description": "专业的Excel文件生成器。接收已整理好的数据内容，将其格式化并生成Excel文件。不负责数据收集和研究，只负责文件生成。",
+  "version": "2.0.0",
+  "url": "http://localhost:10009",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "generate_excel_file",
+      "name": "生成Excel文件",
+      "description": "将提供的数据内容格式化并生成Excel文件。需要输入已准备好的数据内容。",
+      "tags": [
+        "生成Excel文件",
+        "Excel文件",
+        "生成Excel",
+        "创建Excel",
+        "Excel",
+        "xlsx",
+        "生成表格文件",
+        "导出Excel",
+        "保存为Excel"
+      ],
+      "examples": [
+        "将这些数据生成Excel文件",
+        "把内容保存为Excel表格",
+        "生成Excel文件",
+        "导出为Excel格式"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

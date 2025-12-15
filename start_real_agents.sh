@@ -42,10 +42,20 @@ python3 real_ecosystem/agents/translator.py &
 PID_TRANS=$!
 echo "✅ Started Translator Agent (PID: $PID_TRANS)"
 
-# 8. Start Quality Reviewer Agent (Port 10007) - NEW
+# 8. Start Quality Reviewer Agent (Port 10007)
 python3 real_ecosystem/agents/quality_reviewer.py &
 PID_QUALITY=$!
 echo "✅ Started Quality Reviewer Agent (PID: $PID_QUALITY)"
+
+# 9. Start Word Generator Agent (Port 10008)
+python3 real_ecosystem/agents/word_generator.py &
+PID_WORD=$!
+echo "✅ Started Word Generator Agent (PID: $PID_WORD)"
+
+# 10. Start Excel Generator Agent (Port 10009)
+python3 real_ecosystem/agents/excel_generator.py &
+PID_EXCEL=$!
+echo "✅ Started Excel Generator Agent (PID: $PID_EXCEL)"
 
 # Wait for servers to start
 sleep 5

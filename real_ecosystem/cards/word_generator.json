@@ -1,0 +1,49 @@
+{
+  "name": "Word Generator Agent",
+  "description": "专业的Word文档生成器。接收已撰写好的文本内容，将其格式化并生成Word文档。不负责内容创作和研究，只负责文档生成。",
+  "version": "2.0.0",
+  "url": "http://localhost:10008",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "generate_word_document",
+      "name": "生成Word文档",
+      "description": "将提供的文本内容格式化并生成Word文档。需要输入已准备好的文本内容。",
+      "tags": [
+        "生成Word文档",
+        "Word文档",
+        "生成Word",
+        "创建Word",
+        "Word",
+        "docx",
+        "生成文档文件",
+        "导出Word",
+        "保存为Word"
+      ],
+      "examples": [
+        "将这些内容生成Word文档",
+        "把文本保存为Word文件",
+        "生成Word文档",
+        "导出为Word格式"
+      ],
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ]
+    }
+  ]
+}

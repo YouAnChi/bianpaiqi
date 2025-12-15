@@ -82,24 +82,51 @@ class EnhancedWorkflowEngine:
         response.update(kwargs)
         return response
 
-    def _save_result_to_file(self, query: str, result: str, trace_id: str) -> Optional[str]:
-        """将最终结果保存到文件"""
+    def _save_result_to_file(self, query: str, result: str, trace_id: str, plan: ExecutionPlan = None) -> Optional[str]:
+        """将最终结果保存到文件，根据执行的Agent类型智能选择格式"""
         try:
             safe_query = "".join(
                 [c for c in query if c.isalnum() or c in (' ', '-', '_')]
             ).strip().replace(' ', '_')[:50]
-            filename = f"{safe_query}_{trace_id[:8]}.md"
-            filepath = os.path.join(self.output_dir, filename)
+            
+            # 检测是否有Excel或Word生成步骤
+            has_excel = False
+            has_word = False
+            saved_files = []
+            
+            if plan:
+                for step in plan.steps:
+                    if step.status == "success" and step.assigned_agent:
+                        agent_name = step.assigned_agent.name.lower()
+                        if "excel" in agent_name:
+                            has_excel = True
+                        if "word" in agent_name:
+                            has_word = True
+            
+            # 默认保存Markdown文件
+            md_filename = f"{safe_query}_{trace_id[:8]}.md"
+            md_filepath = os.path.join(self.output_dir, md_filename)
 
-            with open(filepath, "w", encoding="utf-8") as f:
+            with open(md_filepath, "w", encoding="utf-8") as f:
                 f.write(f"# Task: {query}\n\n")
                 f.write(f"Trace ID: {trace_id}\n")
                 f.write(f"Date: {datetime.now().isoformat()}\n\n")
                 f.write("---\n\n")
                 f.write(result)
 
-            logger.info(f"[bold green]Result saved to {filepath}[/bold green]")
-            return filepath
+            saved_files.append(md_filepath)
+            logger.info(f"[bold green]Markdown result saved to {md_filepath}[/bold green]")
+            
+            # 如果检测到Excel或Word生成，添加提示信息
+            if has_excel or has_word:
+                file_types = []
+                if has_excel:
+                    file_types.append("Excel (.xlsx)")
+                if has_word:
+                    file_types.append("Word (.docx)")
+                logger.info(f"📊 检测到生成了 {', '.join(file_types)} 文件，请查看output目录")
+            
+            return ", ".join(saved_files) if len(saved_files) > 1 else saved_files[0]
         except Exception as e:
             logger.error(f"Failed to save result to file: {e}")
             return None
@@ -501,7 +528,7 @@ class EnhancedWorkflowEngine:
                     final_output.append(f"## Step {step.step_id}: {step.name}\n\n{step.result}\n")
 
             full_result_text = "\n".join(final_output)
-            saved_path = self._save_result_to_file(query, full_result_text, plan.trace_id)
+            saved_path = self._save_result_to_file(query, full_result_text, plan.trace_id, plan)
 
             # 保存上下文
             self.global_context_store[plan.trace_id] = self.global_context

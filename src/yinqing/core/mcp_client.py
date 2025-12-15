@@ -44,3 +44,10 @@ async def find_agent(session: ClientSession, query: str) -> CallToolResult:
             'query': query,
         },
     )
+
+async def list_all_agents(session: ClientSession) -> CallToolResult:
+    logger.info(f"Calling 'list_all_agents' tool")
+    return await session.call_tool(
+        name='list_all_agents',
+        arguments={},
+    )
