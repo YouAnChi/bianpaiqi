@@ -1,8 +1,20 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from yinqing.core.types import ExecutionPlan
 from yinqing.utils.logger import get_logger
+
+# Load environment variables
+env_path = Path(__file__).parent.parent.parent.parent / '.env'
+load_dotenv(env_path)
+
+# Qwen3-max API Configuration
+QWEN_API_KEY = os.getenv("OPENAI_API_KEY", "sk-79bd9f13361049a4b5c91fc992a6e41a")
+QWEN_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+QWEN_MODEL = os.getenv("OPENAI_MODEL", "qwen3-max")
 
 logger = get_logger(__name__)
 
@@ -10,7 +22,7 @@ class TaskParserLayer:
     """大脑：负责将自然语言拆解为结构化步骤（支持并行依赖）"""
     
     def __init__(self):
-        self.llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1)
+        self.llm = ChatOpenAI(model=QWEN_MODEL, temperature=0.1, base_url=QWEN_BASE_URL, api_key=QWEN_API_KEY)
         self.parser = JsonOutputParser(pydantic_object=ExecutionPlan)
         
         # 优化Prompt：明确支持并行依赖，并智能拆分内容创作和文件生成

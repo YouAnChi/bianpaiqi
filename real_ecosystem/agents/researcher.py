@@ -2,16 +2,23 @@ import os
 import json
 import uvicorn
 import logging
+from pathlib import Path
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from dotenv import load_dotenv
 
-# Hardcoded API Key
-GOOGLE_API_KEY = "AIzaSyC_aqH9032IaWIcRhymnxhSvoT-Mn_u5rs"
-os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent.parent / '.env'
+load_dotenv(env_path)
+
+# Qwen3-max API Configuration from environment
+QWEN_API_KEY = os.getenv("OPENAI_API_KEY", "sk-79bd9f13361049a4b5c91fc992a6e41a")
+QWEN_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+QWEN_MODEL = os.getenv("OPENAI_MODEL", "qwen3-max")
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -27,7 +34,7 @@ class ResearcherAgent:
         由于你在当前环境中无法实时访问互联网，请依赖你的内部知识库（截止日期 2024/2025）。
         请用中文回答所有问题。
         """
-        self.llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
+        self.llm = ChatOpenAI(model=QWEN_MODEL, temperature=0.3, base_url=QWEN_BASE_URL, api_key=QWEN_API_KEY)
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", self.system_prompt),
             ("user", "{input}")
@@ -93,8 +100,13 @@ class ResearcherAgent:
             return JSONResponse({"error": str(e)}, status_code=500)
 
 agent = ResearcherAgent()
+
+async def health_check(request):
+    return JSONResponse({"status": "healthy", "agent": agent.name, "model": "qwen3-max"})
+
 app = Starlette(debug=True, routes=[
     Route("/", agent.handle_request, methods=["POST"]),
+    Route("/health", health_check, methods=["GET"]),
 ])
 
 if __name__ == "__main__":

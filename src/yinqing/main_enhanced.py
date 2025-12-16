@@ -44,8 +44,8 @@ def run(query, review, review_all, threshold, max_retries, rollback, critical_st
     init_api_key()
 
     # Check API Key
-    if not os.getenv("GOOGLE_API_KEY"):
-        click.echo("Error: GOOGLE_API_KEY environment variable is not set.")
+    if not os.getenv("OPENAI_API_KEY"):
+        click.echo("Error: OPENAI_API_KEY environment variable is not set.")
         return
 
     # 解析关键步骤
@@ -177,11 +177,11 @@ def status():
     click.echo("-" * 40)
 
     # 检查API Key
-    api_key = os.getenv("GOOGLE_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if api_key:
-        click.echo(click.style("✅ GOOGLE_API_KEY: 已配置", fg='green'))
+        click.echo(click.style("✅ OPENAI_API_KEY: 已配置", fg='green'))
     else:
-        click.echo(click.style("❌ GOOGLE_API_KEY: 未配置", fg='red'))
+        click.echo(click.style("❌ OPENAI_API_KEY: 未配置", fg='red'))
 
     # 检查服务端口
     import socket

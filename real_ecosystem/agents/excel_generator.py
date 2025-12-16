@@ -6,19 +6,22 @@ from pathlib import Path
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils import get_column_letter
-
-# Load API Key from environment
 from dotenv import load_dotenv
-load_dotenv()
 
-if not os.getenv("GOOGLE_API_KEY"):
-    raise ValueError("GOOGLE_API_KEY not found in environment variables")
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent.parent / '.env'
+load_dotenv(env_path)
+
+# Qwen3-max API Configuration from environment
+QWEN_API_KEY = os.getenv("OPENAI_API_KEY", "sk-79bd9f13361049a4b5c91fc992a6e41a")
+QWEN_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+QWEN_MODEL = os.getenv("OPENAI_MODEL", "qwen3-max")
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -52,7 +55,7 @@ class ExcelGeneratorAgent:
         
         请用中文生成内容，数据要真实合理。
         """
-        self.llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
+        self.llm = ChatOpenAI(model=QWEN_MODEL, temperature=0.3, base_url=QWEN_BASE_URL, api_key=QWEN_API_KEY)
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", self.system_prompt),
             ("user", "{input}")
@@ -226,8 +229,13 @@ class ExcelGeneratorAgent:
             return JSONResponse({"error": str(e)}, status_code=500)
 
 agent = ExcelGeneratorAgent()
+
+async def health_check(request):
+    return JSONResponse({"status": "healthy", "agent": agent.name, "model": "qwen3-max"})
+
 app = Starlette(debug=True, routes=[
     Route("/", agent.handle_request, methods=["POST"]),
+    Route("/health", health_check, methods=["GET"]),
 ])
 
 if __name__ == "__main__":

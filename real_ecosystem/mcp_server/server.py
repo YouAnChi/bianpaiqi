@@ -194,7 +194,29 @@ def find_agent(query: str) -> str:
 
 def run_mcp():
     print("🚀 Starting Real MCP Server on port 10000 (SSE)...")
+    from starlette.responses import JSONResponse
+    from starlette.routing import Route
+    
+    # 获取MCP的SSE应用（已经是完整的Starlette应用）
     app = mcp.sse_app()
+    
+    # 添加健康检查路由到现有应用
+    async def health_check(request):
+        return JSONResponse({
+            "status": "healthy",
+            "service": "Real MCP Server",
+            "port": 10000,
+            "transport": "sse",
+            "tools": ["list_all_agents", "find_agent"]
+        })
+    
+    # 将健康检查路由添加到应用的路由列表开头
+    app.routes.insert(0, Route("/health", health_check, methods=["GET"]))
+    
+    print("📋 Available routes:")
+    for route in app.routes:
+        print(f"  - {route.path if hasattr(route, 'path') else route}")
+    
     uvicorn.run(app, host="0.0.0.0", port=10000)
 
 if __name__ == "__main__":

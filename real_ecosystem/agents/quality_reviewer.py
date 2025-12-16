@@ -17,10 +17,21 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 import uvicorn
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent.parent / '.env'
+load_dotenv(env_path)
+
+# Qwen3-max API Configuration from environment
+QWEN_API_KEY = os.getenv("OPENAI_API_KEY", "sk-79bd9f13361049a4b5c91fc992a6e41a")
+QWEN_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+QWEN_MODEL = os.getenv("OPENAI_MODEL", "qwen3-max")
 
 
 class QualityReviewerAgent:
@@ -49,21 +60,23 @@ class QualityReviewerAgent:
 - "human_intervention": 需要人工介入（问题严重或复杂）
 
 请严格按照以下JSON格式返回审核结果:
-{
+{{
     "passed": true/false,
     "score": 0.0-1.0,
     "issues": ["问题1", "问题2"],
     "suggestions": ["建议1", "建议2"],
-    "rollback_recommendation": {
+    "rollback_recommendation": {{
         "action_type": "retry|revert|human_intervention",
         "target_step_id": 步骤ID,
         "reason": "回溯原因"
-    } // 仅当 passed=false 时提供
-}"""
+    }} // 仅当 passed=false 时提供
+}}"""
 
-        self.llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
-            temperature=0.1  # 低温度确保审核结果一致性
+        self.llm = ChatOpenAI(
+            model=QWEN_MODEL,
+            temperature=0.1,  # 低温度确保审核结果一致性
+            base_url=QWEN_BASE_URL,
+            api_key=QWEN_API_KEY
         )
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", self.system_prompt),

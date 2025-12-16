@@ -23,8 +23,8 @@ def run(query):
     init_api_key()
     
     # Check API Key
-    if not os.getenv("GOOGLE_API_KEY"):
-        click.echo("Error: GOOGLE_API_KEY environment variable is not set.")
+    if not os.getenv("OPENAI_API_KEY"):
+        click.echo("Error: OPENAI_API_KEY environment variable is not set.")
         return
 
     agent = WorkflowEngine()

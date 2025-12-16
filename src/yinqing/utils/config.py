@@ -9,8 +9,8 @@ class MCPServerConfig:
     transport: str = "sse" # or stdio, http
 
 def init_api_key():
-    """Ensure Google API Key is set."""
-    if not os.getenv("GOOGLE_API_KEY"):
+    """Ensure OpenAI API Key is set for Qwen3-max."""
+    if not os.getenv("OPENAI_API_KEY"):
         # You might want to log a warning or error here
         pass
 
